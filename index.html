@@ -151,6 +151,16 @@ let state = {
   editingRecipe: null,
 };
 
+let debounceTimer = null;
+function debounceRender() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    render();
+    const el = document.getElementById('recipe-search');
+    if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  }, 300);
+}
+
 function persist() {
   save('mep_recipes', state.recipes);
   save('mep_planner', state.planner);
@@ -319,7 +329,7 @@ function renderRecipes() {
 
   return `
     <div class="action-row">
-      <input class="search-input" type="search" placeholder="Search recipes…" value="${esc(state.search)}" oninput="state.search=this.value;render()" autocomplete="off" autocorrect="off">
+      <input class="search-input" type="search" placeholder="Search recipes…" value="${esc(state.search)}" oninput="state.search=this.value;debounceRender()" autocomplete="off" autocorrect="off" id="recipe-search">
       <button class="btn btn-primary btn-sm" onclick="state.showNewRecipe=true;state.newRecipe={name:'',time:'',servings:2,tags:'',ingredients:[{qty:'',name:''}],steps:''};render()">+ New</button>
     </div>
     <div class="recipe-grid">${cards || '<div class="empty"><div class="empty-icon">🔍</div>No recipes found</div>'}</div>
