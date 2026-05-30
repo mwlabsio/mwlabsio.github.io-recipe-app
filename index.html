@@ -65,11 +65,11 @@
   .planner-table th{font-size:11px;font-weight:600;color:var(--accent);text-align:center;padding:8px 4px;border-bottom:1px solid var(--border);letter-spacing:0.3px}
   .planner-table th.meal-col{color:var(--muted);text-align:left;font-size:10px;width:70px}
   .planner-table td{padding:4px 3px;border-bottom:1px solid var(--border);vertical-align:top}
-  .meal-cell{background:var(--accentbg);border-radius:6px;padding:5px 7px;font-size:11px;position:relative;cursor:default}
-  .meal-cell-name{font-weight:600;color:var(--accent2);padding-right:16px;line-height:1.3}
+  .meal-cell{background:var(--accentbg);border-radius:6px;padding:5px 7px;font-size:11px;position:relative;cursor:default;min-height:44px}
+  .meal-cell-name{font-weight:600;color:var(--accent2);padding-right:16px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
   .meal-cell-time{color:var(--accent);font-size:10px;margin-top:1px}
   .meal-cell-del{position:absolute;top:3px;right:4px;background:none;border:none;color:var(--accent);font-size:15px;line-height:1;cursor:pointer;padding:0;font-weight:700}
-  .meal-select{font-size:11px;padding:5px 22px 5px 7px;color:var(--muted);border-color:var(--border);background-color:var(--bg)}
+  .meal-select{font-size:11px;padding:5px 22px 5px 7px;color:var(--muted);border-color:var(--border);background-color:var(--bg);min-height:44px;width:100%}
   .recipe-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .recipe-grid .card+.card{margin-top:0}
   .recipe-grid .recipe-card{display:flex;flex-direction:column;align-self:stretch}
@@ -264,7 +264,8 @@ function renderRecipes() {
         <div style="margin-bottom:10px">${ings}</div>
         <div class="label">Method</div>
         <div class="steps-text">${esc(r.steps)}</div>
-        <div style="margin-top:12px;display:flex;gap:8px">
+        <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
+          ${r.url ? `<a href="${esc(r.url)}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none">🔗 View source</a>` : ''}
           <button class="btn btn-secondary btn-sm" onclick="startEditRecipe(${r.id});event.stopPropagation()">✏️ Edit</button>
           <button class="btn btn-danger btn-sm" onclick="deleteRecipe(${r.id});event.stopPropagation()">Delete</button>
         </div>`;
@@ -315,6 +316,7 @@ function renderNewRecipeModal() {
         <div class="form-group"><div class="label">Servings</div><input type="number" value="${state.newRecipe.servings||2}" oninput="state.newRecipe.servings=parseInt(this.value)"></div>
       </div>
       <div class="form-group"><div class="label">Tags (comma separated)</div><input type="text" placeholder="dinner, vegetarian" value="${esc(state.newRecipe.tags||'')}" oninput="state.newRecipe.tags=this.value" autocomplete="off" autocorrect="off"></div>
+      <div class="form-group"><div class="label">Source URL (optional)</div><input type="url" placeholder="https://..." value="${esc(state.newRecipe.url||'')}" oninput="state.newRecipe.url=this.value" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
       <div class="form-group"><div class="label">Ingredients</div>${renderIngredientRows(ings, 'state.newRecipe.ingredients')}</div>
       <div class="form-group" style="margin-top:12px"><div class="label">Method / Steps</div><textarea placeholder="Describe how to cook this…" oninput="state.newRecipe.steps=this.value">${esc(state.newRecipe.steps||'')}</textarea></div>
       <div class="row" style="gap:10px">
@@ -334,6 +336,7 @@ function startEditRecipe(id) {
     time: r.time,
     servings: r.servings,
     tags: r.tags.join(', '),
+    url: r.url || '',
     ingredients: r.ingredients.map(i => ({...i})),
     steps: r.steps,
   };
@@ -352,6 +355,7 @@ function renderEditRecipeModal() {
         <div class="form-group"><div class="label">Servings</div><input type="number" value="${e.servings}" oninput="state.editingRecipe.servings=parseInt(this.value)"></div>
       </div>
       <div class="form-group"><div class="label">Tags (comma separated)</div><input type="text" value="${esc(e.tags)}" oninput="state.editingRecipe.tags=this.value" autocomplete="off" autocorrect="off"></div>
+      <div class="form-group"><div class="label">Source URL (optional)</div><input type="url" placeholder="https://..." value="${esc(e.url||'')}" oninput="state.editingRecipe.url=this.value" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
       <div class="form-group"><div class="label">Ingredients</div>${renderIngredientRows(e.ingredients, 'state.editingRecipe.ingredients')}</div>
       <div class="form-group" style="margin-top:12px"><div class="label">Method / Steps</div><textarea oninput="state.editingRecipe.steps=this.value">${esc(e.steps)}</textarea></div>
       <div class="row" style="gap:10px">
@@ -373,6 +377,7 @@ function saveEditRecipe() {
       time: e.time.trim() || '—',
       servings: e.servings || 2,
       tags: e.tags ? e.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
+      url: e.url ? e.url.trim() : '',
       ingredients: e.ingredients.filter(i => i.name.trim()),
       steps: e.steps.trim(),
     };
@@ -390,6 +395,7 @@ function saveNewRecipe() {
     time: nr.time.trim() || '—',
     servings: nr.servings || 2,
     tags: nr.tags ? nr.tags.split(',').map(t=>t.trim()).filter(Boolean) : [],
+    url: nr.url ? nr.url.trim() : '',
     ingredients: (nr.ingredients || []).filter(i => i.name.trim()),
     steps: nr.steps.trim(),
   };
