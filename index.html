@@ -84,8 +84,8 @@
   .action-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
   .search-input{flex:1;min-width:140px}
   .fab{position:fixed;bottom:max(24px,env(safe-area-inset-bottom));right:20px;width:52px;height:52px;border-radius:26px;background:var(--accent);color:#fff;font-size:26px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,0.2);z-index:100}
-  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:flex;align-items:flex-end;justify-content:center}
-  .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:90vh;overflow-y:auto;padding-bottom:max(20px,env(safe-area-inset-bottom))}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
+  .modal{background:var(--surface);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:92vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:max(24px,env(safe-area-inset-bottom))}
   .modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
   .modal-title{font-size:17px;font-weight:700;margin-bottom:16px}
   .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--yellowbg);color:var(--yellow);letter-spacing:0.3px}
@@ -175,8 +175,8 @@ function render() {
 
 // ── Planner ────────────────────────────────────────────
 function renderPlanner() {
-  let rows = MEALS.map(meal => {
-    let cells = DAYS.map(day => {
+  let rows = DAYS.map(day => {
+    let cells = MEALS.map(meal => {
       const rids = (state.planner[day] || {})[meal] || [];
       const items = rids.map((rid, idx) => {
         const recipe = state.recipes.find(r => r.id === rid);
@@ -184,13 +184,16 @@ function renderPlanner() {
         return `<div class="meal-cell" style="margin-bottom:3px">
           <div class="meal-cell-name">${esc(recipe.name)}</div>
           <div class="meal-cell-time">${esc(recipe.time)}</div>
-          <button class="meal-cell-del" onclick="removeMealItem('${day}','${meal}',${idx})">×</button>
+          <button class="meal-cell-del" onclick="removeMealItem('${day}','${meal}',${idx})">\u00d7</button>
         </div>`;
       }).join('');
       const opts = state.recipes.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
-      return `<td>${items}<select class="meal-select" onchange="assignMeal('${day}','${meal}',this.value);this.value=''"><option value="">+ add</option>${opts}</select></td>`;
+      return `<td style="padding:4px 3px;border-bottom:1px solid var(--border);vertical-align:top">${items}<select class="meal-select" onchange="assignMeal('${day}','${meal}',this.value);this.value=''"><option value="">+ add</option>${opts}</select></td>`;
     }).join('');
-    return `<tr><td style="padding:4px 6px 4px 0"><span class="label" style="white-space:nowrap">${meal}</span></td>${cells}</tr>`;
+    return `<tr>
+      <td style="padding:8px 10px 8px 0;font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap;vertical-align:top;border-bottom:1px solid var(--border)">${day}</td>
+      ${cells}
+    </tr>`;
   }).join('');
 
   return `
@@ -198,17 +201,14 @@ function renderPlanner() {
       <h2 style="margin:0">This week</h2>
       <button class="btn btn-primary btn-sm" onclick="generateGrocery()">🛒 Make list</button>
     </div>
-    <div class="planner-scroll">
-      <table class="planner-table">
-        <thead><tr>
-          <th class="meal-col"></th>
-          ${DAYS.map(d=>`<th>${d}</th>`).join('')}
-        </tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
-    </div>`;
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr>
+        <th style="width:44px"></th>
+        ${MEALS.map(m=>`<th style="font-size:11px;font-weight:600;color:var(--muted);text-align:center;padding:6px 4px;border-bottom:1px solid var(--border);letter-spacing:0.5px">${m.toUpperCase()}</th>`).join('')}
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
 }
-
 function assignMeal(day, meal, rid) {
   if (!rid) return;
   if (!state.planner[day]) state.planner[day] = {};
