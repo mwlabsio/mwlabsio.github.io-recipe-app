@@ -13,7 +13,7 @@
     --bg:#f5f2ee;--surface:#ffffff;--card:#ffffff;--border:#ece8e0;--border2:#d8d2c8;
     --text:#1a1814;--muted:#8a8278;--accent:#2d6a4f;--accent2:#1b4332;--accentbg:#e8f5ee;
     --danger:#c0392b;--dangerbg:#fdecea;--yellow:#f4a261;--yellowbg:#fef3e2;
-    --radius:16px;--radius-sm:12px;--radius-xs:10px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);
+    --radius:16px;--radius-sm:12px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.04);
   }
   @media(prefers-color-scheme:dark){
     :root{
@@ -25,14 +25,16 @@
   html,body{height:100%;overflow:hidden;overflow-x:hidden;max-width:100vw;background:var(--surface);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Helvetica Neue',sans-serif;font-size:15px}
   #app{display:flex;flex-direction:column;height:100%;height:-webkit-fill-available;overflow:hidden;max-width:100vw}
   header{background:var(--surface);border-bottom:1.5px solid var(--border);padding:14px 20px 12px;padding-top:max(14px,env(safe-area-inset-top));flex-shrink:0;position:relative;z-index:10}
+  .header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
   .logo{font-size:36px;font-weight:800;color:var(--accent);letter-spacing:-0.8px;display:flex;align-items:center;gap:6px;line-height:1}
   .logo-icon{display:flex;align-items:center}
   .logo span{font-weight:400;color:var(--muted);font-size:13px;display:block;letter-spacing:0.5px;margin-top:-1px}
-  nav{display:flex;gap:4px;background:var(--bg);border-radius:var(--radius-sm);padding:3px;margin-top:10px}
+  .user-btn{display:flex;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--border);border-radius:50px;padding:6px 12px 6px 8px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text)}
+  .user-avatar{width:26px;height:26px;border-radius:50%;background:var(--accentbg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent2);overflow:hidden;flex-shrink:0}
+  .user-avatar img{width:100%;height:100%;object-fit:cover}
+  nav{display:flex;gap:4px;background:var(--bg);border-radius:var(--radius-sm);padding:3px}
   nav button{flex:1;padding:8px 4px;border:none;background:transparent;color:var(--muted);font-size:13px;font-weight:500;border-radius:6px;cursor:pointer;transition:all 0.15s;font-family:inherit}
-  
   nav button.active{background:var(--surface);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,0.1);font-weight:600}
-  
   main{flex:1;overflow-y:auto;overflow-x:hidden;padding:16px 16px;padding-bottom:max(20px,env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
   h2{font-size:17px;font-weight:600;margin-bottom:14px}
   .btn{display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border-radius:50px;border:none;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;transition:all 0.15s}
@@ -48,7 +50,6 @@
   .card{background:var(--card);border:1.5px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
   .card+.card{margin-top:10px}
   .tag{display:inline-block;font-size:11px;padding:4px 10px;border-radius:50px;background:var(--accentbg);color:var(--accent2);font-weight:500;margin-right:4px;margin-bottom:4px}
-  .tag.yellow{background:var(--yellowbg);color:var(--yellow)}
   .row{display:flex;gap:10px;align-items:center}
   .row-between{display:flex;justify-content:space-between;align-items:center}
   .label{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:5px}
@@ -62,11 +63,6 @@
   .checkbox.checked::after{content:'✓';color:white;font-size:13px;font-weight:700}
   .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
   .form-group{margin-bottom:12px}
-  .planner-scroll{overflow-x:auto;margin:0 -16px;padding:0 16px}
-  .planner-table{min-width:560px;width:100%;border-collapse:collapse}
-  .planner-table th{font-size:11px;font-weight:600;color:var(--accent);text-align:center;padding:8px 4px;border-bottom:1px solid var(--border);letter-spacing:0.3px}
-  .planner-table th.meal-col{color:var(--muted);text-align:left;font-size:10px;width:70px}
-  .planner-table td{padding:4px 3px;border-bottom:1px solid var(--border);vertical-align:top}
   .meal-cell{background:var(--accentbg);border-radius:12px;padding:7px 9px;font-size:11px;position:relative;cursor:pointer;min-height:44px;border:1px solid rgba(45,106,79,0.15)}
   .meal-cell-name{font-weight:600;color:var(--accent2);padding-right:16px;line-height:1.3;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
   .meal-cell-time{color:var(--accent);font-size:10px;margin-top:1px}
@@ -85,48 +81,117 @@
   .steps-text{font-size:13px;color:var(--muted);line-height:1.6}
   .action-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center}
   .search-input{flex:1;min-width:140px}
-  .fab{position:fixed;bottom:max(24px,env(safe-area-inset-bottom));right:20px;width:52px;height:52px;border-radius:26px;background:var(--accent);color:#fff;font-size:26px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(0,0,0,0.2);z-index:100}
   .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:1000;display:flex;align-items:flex-end;justify-content:center;overflow:hidden}
   .modal{background:var(--surface);border-radius:28px 28px 0 0;padding:24px 20px;width:100%;height:75vh;overflow-y:auto;-webkit-overflow-scrolling:touch;padding-bottom:max(24px,env(safe-area-inset-bottom))}
   .modal-handle{width:40px;height:5px;background:var(--border2);border-radius:3px;margin:0 auto 20px}
   .modal-title{font-size:17px;font-weight:700;margin-bottom:16px}
   .badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;background:var(--yellowbg);color:var(--yellow);letter-spacing:0.3px}
+  /* Login screen */
+  .login-screen{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:40px 24px;text-align:center;background:var(--bg)}
+  .login-logo{margin-bottom:24px}
+  .login-title{font-size:32px;font-weight:800;color:var(--accent);margin-bottom:6px}
+  .login-sub{font-size:15px;color:var(--muted);margin-bottom:40px;line-height:1.5}
+  .google-btn{display:flex;align-items:center;gap:12px;background:var(--surface);border:1.5px solid var(--border);border-radius:50px;padding:14px 28px;font-size:16px;font-weight:600;color:var(--text);cursor:pointer;font-family:inherit;box-shadow:var(--shadow)}
+  .google-btn:active{opacity:0.85}
+  .loading{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:15px}
+  .sync-indicator{font-size:11px;color:var(--muted);margin-left:8px}
 </style>
 </head>
 <body>
 <div id="app">
-  <header>
-    <div class="logo"><svg width="38" height="38" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
-  <path d="M21 3C21 3 13 3 8 8C3.58 12.42 4 19 4 19C4 19 10.58 19.42 15 15C18.5 11.5 19.5 6.5 19.5 6.5C19.5 6.5 14.5 7.5 11 11" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M4 19L9 14" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
-</svg><div>Mealwise<span>your kitchen companion</span></div></div>
-    <nav>
-      <button onclick="setTab('planner')" id="tab-planner">📅 Planner</button>
-      <button onclick="setTab('recipes')" id="tab-recipes">📖 Recipes</button>
-      <button onclick="setTab('grocery')" id="tab-grocery">🛒 Grocery</button>
-    </nav>
-  </header>
-  <main id="main"></main>
+  <div id="root"></div>
 </div>
 
-<script>
-// ── State ──────────────────────────────────────────────
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyArTdRs2Gg3hu8YtTRreFBfkJVrCAxkWS4",
+  authDomain: "mealwise-61c7a.firebaseapp.com",
+  projectId: "mealwise-61c7a",
+  storageBucket: "mealwise-61c7a.firebasestorage.app",
+  messagingSenderId: "668104829806",
+  appId: "1:668104829806:web:08e14a9b934941d9142f7f"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+// ── Default Data ───────────────────────────────────────
 const DEFAULT_RECIPES = [
-  {id:1,name:"Avocado Toast",time:"10 min",servings:2,tags:["breakfast","quick"],ingredients:[{name:"sourdough bread",qty:"2 slices"},{name:"avocado",qty:"1"},{name:"lemon juice",qty:"1 tsp"},{name:"red pepper flakes",qty:"pinch"},{name:"salt",qty:"to taste"}],steps:"Toast bread. Mash avocado with lemon juice and salt. Spread on toast, top with red pepper flakes."},
-  {id:2,name:"Chicken Stir Fry",time:"25 min",servings:4,tags:["dinner","protein"],ingredients:[{name:"chicken breast",qty:"500g"},{name:"bell peppers",qty:"2"},{name:"broccoli",qty:"1 cup"},{name:"soy sauce",qty:"3 tbsp"},{name:"garlic",qty:"3 cloves"},{name:"sesame oil",qty:"1 tbsp"}],steps:"Slice chicken and veggies. Stir fry chicken until cooked. Add veggies and garlic. Season with soy sauce and sesame oil."},
-  {id:3,name:"Greek Salad",time:"15 min",servings:2,tags:["lunch","vegetarian"],ingredients:[{name:"cucumber",qty:"1"},{name:"cherry tomatoes",qty:"1 cup"},{name:"feta cheese",qty:"100g"},{name:"kalamata olives",qty:"¼ cup"},{name:"olive oil",qty:"2 tbsp"},{name:"oregano",qty:"1 tsp"}],steps:"Chop all vegetables. Combine in bowl. Add feta and olives. Dress with olive oil and oregano."},
-  {id:4,name:"Overnight Oats",time:"5 min + overnight",servings:1,tags:["breakfast","meal-prep"],ingredients:[{name:"rolled oats",qty:"½ cup"},{name:"milk",qty:"½ cup"},{name:"chia seeds",qty:"1 tbsp"},{name:"honey",qty:"1 tbsp"},{name:"berries",qty:"½ cup"}],steps:"Mix oats, milk, chia seeds, and honey. Refrigerate overnight. Top with berries before eating."},
-  {id:5,name:"Lentil Soup",time:"40 min",servings:6,tags:["dinner","vegetarian","meal-prep"],ingredients:[{name:"red lentils",qty:"2 cups"},{name:"onion",qty:"1"},{name:"carrots",qty:"2"},{name:"cumin",qty:"2 tsp"},{name:"vegetable broth",qty:"6 cups"},{name:"lemon juice",qty:"2 tbsp"}],steps:"Sauté onion and carrots. Add spices. Add lentils and broth. Simmer 30 min until soft. Finish with lemon juice."},
+  {id:1,name:"Avocado Toast",time:"10 min",servings:2,tags:["breakfast","quick"],ingredients:[{name:"sourdough bread",qty:"2 slices"},{name:"avocado",qty:"1"},{name:"lemon juice",qty:"1 tsp"},{name:"red pepper flakes",qty:"pinch"},{name:"salt",qty:"to taste"}],steps:"Toast bread. Mash avocado with lemon juice and salt. Spread on toast, top with red pepper flakes.",url:""},
+  {id:2,name:"Chicken Stir Fry",time:"25 min",servings:4,tags:["dinner","protein"],ingredients:[{name:"chicken breast",qty:"500g"},{name:"bell peppers",qty:"2"},{name:"broccoli",qty:"1 cup"},{name:"soy sauce",qty:"3 tbsp"},{name:"garlic",qty:"3 cloves"},{name:"sesame oil",qty:"1 tbsp"}],steps:"Slice chicken and veggies. Stir fry chicken until cooked. Add veggies and garlic. Season with soy sauce and sesame oil.",url:""},
+  {id:3,name:"Greek Salad",time:"15 min",servings:2,tags:["lunch","vegetarian"],ingredients:[{name:"cucumber",qty:"1"},{name:"cherry tomatoes",qty:"1 cup"},{name:"feta cheese",qty:"100g"},{name:"kalamata olives",qty:"¼ cup"},{name:"olive oil",qty:"2 tbsp"},{name:"oregano",qty:"1 tsp"}],steps:"Chop all vegetables. Combine in bowl. Add feta and olives. Dress with olive oil and oregano.",url:""},
+  {id:4,name:"Overnight Oats",time:"5 min + overnight",servings:1,tags:["breakfast","meal-prep"],ingredients:[{name:"rolled oats",qty:"½ cup"},{name:"milk",qty:"½ cup"},{name:"chia seeds",qty:"1 tbsp"},{name:"honey",qty:"1 tbsp"},{name:"berries",qty:"½ cup"}],steps:"Mix oats, milk, chia seeds, and honey. Refrigerate overnight. Top with berries before eating.",url:""},
+  {id:5,name:"Lentil Soup",time:"40 min",servings:6,tags:["dinner","vegetarian","meal-prep"],ingredients:[{name:"red lentils",qty:"2 cups"},{name:"onion",qty:"1"},{name:"carrots",qty:"2"},{name:"cumin",qty:"2 tsp"},{name:"vegetable broth",qty:"6 cups"},{name:"lemon juice",qty:"2 tbsp"}],steps:"Sauté onion and carrots. Add spices. Add lentils and broth. Simmer 30 min until soft. Finish with lemon juice.",url:""},
 ];
 
 const DAYS = ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
 const MEALS = ["Breakfast","Lunch","Dinner"];
 
-function load(key, def) {
-  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch { return def; }
+// ── State ──────────────────────────────────────────────
+let user = null;
+let saveTimer = null;
+let state = {
+  tab: 'planner',
+  recipes: DEFAULT_RECIPES,
+  planner: {},
+  grocery: [],
+  search: '',
+  expandedRecipe: null,
+  plannerViewRecipe: null,
+  showNewRecipe: false,
+  newRecipe: null,
+  editingRecipe: null,
+  syncing: false,
+};
+
+// ── Firestore ──────────────────────────────────────────
+async function loadUserData(uid) {
+  try {
+    const snap = await getDoc(doc(db, 'users', uid));
+    if (snap.exists()) {
+      const data = snap.data();
+      state.recipes = data.recipes || DEFAULT_RECIPES;
+      state.planner = migratePlanner(data.planner || {});
+      state.grocery = data.grocery || [];
+    } else {
+      // New user — save defaults
+      state.recipes = DEFAULT_RECIPES;
+      state.planner = {};
+      state.grocery = [];
+      await saveUserData(uid);
+    }
+  } catch(e) { console.error(e); }
 }
-function save(key, val) {
-  try { localStorage.setItem(key, JSON.stringify(val)); } catch {}
+
+async function saveUserData(uid) {
+  if (!uid) return;
+  try {
+    state.syncing = true;
+    renderHeader();
+    await setDoc(doc(db, 'users', uid), {
+      recipes: state.recipes,
+      planner: state.planner,
+      grocery: state.grocery,
+      updatedAt: new Date().toISOString(),
+    });
+    state.syncing = false;
+    renderHeader();
+  } catch(e) {
+    state.syncing = false;
+    renderHeader();
+    console.error(e);
+  }
+}
+
+function persist() {
+  if (!user) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => saveUserData(user.uid), 1000);
 }
 
 function migratePlanner(planner) {
@@ -141,56 +206,140 @@ function migratePlanner(planner) {
   return out;
 }
 
-let state = {
-  tab: 'planner',
-  recipes: load('mep_recipes', DEFAULT_RECIPES),
-  planner: migratePlanner(load('mep_planner', {})),
-  grocery: load('mep_grocery', []),
-  search: '',
-  expandedRecipe: null,
-  plannerViewRecipe: null,
-  showNewRecipe: false,
-  newRecipe: null,
-  editingRecipe: null,
-};
-
-let debounceTimer = null;
-function debounceRender() {
-  clearTimeout(debounceTimer);
-  debounceTimer = setTimeout(() => {
-    render();
-    const el = document.getElementById('recipe-search');
-    if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
-  }, 300);
+// ── Auth ───────────────────────────────────────────────
+async function signInWithGoogle() {
+  const provider = new GoogleAuthProvider();
+  try { await signInWithPopup(auth, provider); }
+  catch(e) { console.error(e); }
 }
 
-function persist() {
-  save('mep_recipes', state.recipes);
-  save('mep_planner', state.planner);
-  save('mep_grocery', state.grocery);
+async function handleSignOut() {
+  if (confirm('Sign out of Mealwise?')) await signOut(auth);
 }
 
-function setTab(t) {
+onAuthStateChanged(auth, async (u) => {
+  user = u;
+  if (u) {
+    renderLoading();
+    await loadUserData(u.uid);
+    renderApp();
+    setTab('planner');
+  } else {
+    renderLogin();
+  }
+});
+
+// ── Render shells ──────────────────────────────────────
+function renderLoading() {
+  document.getElementById('root').innerHTML = `<div class="loading">Loading your recipes…</div>`;
+}
+
+function renderLogin() {
+  document.getElementById('root').innerHTML = `
+    <div class="login-screen">
+      <div class="login-logo">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M21 3C21 3 13 3 8 8C3.58 12.42 4 19 4 19C4 19 10.58 19.42 15 15C18.5 11.5 19.5 6.5 19.5 6.5C19.5 6.5 14.5 7.5 11 11" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M4 19L9 14" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div class="login-title">Mealwise</div>
+      <div class="login-sub">Plan your meals, manage recipes,<br>and build your grocery list — all in one place.</div>
+      <button class="google-btn" onclick="window.signInWithGoogle()">
+        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
+    </div>`;
+  window.signInWithGoogle = signInWithGoogle;
+}
+
+function renderApp() {
+  document.getElementById('root').innerHTML = `
+    <div id="app-inner" style="display:flex;flex-direction:column;height:100%;height:-webkit-fill-available;overflow:hidden">
+      <header>
+        <div class="header-row">
+          <div class="logo">
+            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0">
+              <path d="M21 3C21 3 13 3 8 8C3.58 12.42 4 19 4 19C4 19 10.58 19.42 15 15C18.5 11.5 19.5 6.5 19.5 6.5C19.5 6.5 14.5 7.5 11 11" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M4 19L9 14" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            <div>Mealwise<span>your kitchen companion</span></div>
+          </div>
+          <div id="user-area"></div>
+        </div>
+        <nav>
+          <button onclick="setTab('planner')" id="tab-planner">📅 Planner</button>
+          <button onclick="setTab('recipes')" id="tab-recipes">📖 Recipes</button>
+          <button onclick="setTab('grocery')" id="tab-grocery">🛒 Grocery</button>
+        </nav>
+      </header>
+      <main id="main"></main>
+    </div>`;
+  renderHeader();
+  window.handleSignOut = handleSignOut;
+}
+
+function renderHeader() {
+  const el = document.getElementById('user-area');
+  if (!el || !user) return;
+  const initials = user.displayName ? user.displayName.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2) : '?';
+  const photo = user.photoURL;
+  el.innerHTML = `
+    <button class="user-btn" onclick="window.handleSignOut()">
+      <div class="user-avatar">${photo ? `<img src="${photo}" alt="">` : initials}</div>
+      <span>${user.displayName ? user.displayName.split(' ')[0] : 'You'}</span>
+      ${state.syncing ? '<span class="sync-indicator">saving…</span>' : ''}
+    </button>`;
+}
+
+// ── Tab ────────────────────────────────────────────────
+window.setTab = function(t) {
   state.tab = t;
   ['planner','recipes','grocery'].forEach(id => {
-    document.getElementById('tab-'+id).classList.toggle('active', id === t);
+    const el = document.getElementById('tab-'+id);
+    if (el) el.classList.toggle('active', id === t);
   });
   render();
 }
 
+function setTab(t) { window.setTab(t); }
+
 // ── Render ─────────────────────────────────────────────
 function render() {
   const main = document.getElementById('main');
+  if (!main) return;
   if (state.tab === 'planner') main.innerHTML = renderPlanner();
   else if (state.tab === 'recipes') main.innerHTML = renderRecipes();
   else main.innerHTML = renderGrocery();
-  bindEvents();
 }
 
-// ── Planner Quick View ─────────────────────────────────
-function viewRecipeFromPlanner(id) {
-  state.plannerViewRecipe = id;
-  render();
+// ── Planner ────────────────────────────────────────────
+window.viewRecipeFromPlanner = function(id) { state.plannerViewRecipe = id; render(); }
+window.assignMeal = function(day, meal, rid) {
+  if (!rid) return;
+  if (!state.planner[day]) state.planner[day] = {};
+  if (!state.planner[day][meal]) state.planner[day][meal] = [];
+  state.planner[day][meal].push(parseInt(rid));
+  persist(); render();
+}
+window.removeMealItem = function(day, meal, idx) {
+  if (!state.planner[day] || !state.planner[day][meal]) return;
+  state.planner[day][meal].splice(idx, 1);
+  persist(); render();
+}
+window.generateGrocery = function() {
+  const items = {};
+  Object.values(state.planner).forEach(dm => {
+    Object.values(dm || {}).forEach(rids => {
+      (Array.isArray(rids) ? rids : [rids]).forEach(rid => {
+        const r = state.recipes.find(r => r.id === rid);
+        if (r) r.ingredients.forEach(ing => { items[ing.name] = ing.qty; });
+      });
+    });
+  });
+  const list = Object.entries(items).map(([name, qty], i) => ({ id: Date.now()+i, name, qty, checked: false, source: 'planner' }));
+  state.grocery = [...list, ...state.grocery.filter(i => i.source === 'manual')];
+  persist(); setTab('grocery');
 }
 
 function renderPlannerRecipeModal() {
@@ -213,33 +362,29 @@ function renderPlannerRecipeModal() {
       ${r.url ? `<a href="${esc(r.url)}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none;display:inline-flex;margin-bottom:16px">🔗 View source</a>` : ''}
       <div style="display:flex;gap:8px">
         <button class="btn btn-secondary" style="flex:1" onclick="state.plannerViewRecipe=null;render()">Close</button>
-        <button class="btn btn-primary" style="flex:1" onclick="state.plannerViewRecipe=null;state.tab='recipes';state.expandedRecipe=${r.id};render()">✏️ Edit</button>
+        <button class="btn btn-primary" style="flex:1" onclick="state.plannerViewRecipe=null;window.setTab('recipes');state.expandedRecipe=${r.id};render()">✏️ Edit</button>
       </div>
     </div>
   </div>`;
 }
 
-// ── Planner ────────────────────────────────────────────
 function renderPlanner() {
-  let rows = DAYS.map(day => {
-    let cells = MEALS.map(meal => {
+  const rows = DAYS.map(day => {
+    const cells = MEALS.map(meal => {
       const rids = (state.planner[day] || {})[meal] || [];
       const items = rids.map((rid, idx) => {
         const recipe = state.recipes.find(r => r.id === rid);
         if (!recipe) return '';
         return `<div class="meal-cell" style="margin-bottom:3px">
-          <div class="meal-cell-name" onclick="viewRecipeFromPlanner(${recipe.id})" style="cursor:pointer">${esc(recipe.name)}</div>
+          <div class="meal-cell-name" onclick="viewRecipeFromPlanner(${recipe.id})">${esc(recipe.name)}</div>
           <div class="meal-cell-time">${esc(recipe.time)}</div>
-          <button class="meal-cell-del" onclick="removeMealItem('${day}','${meal}',${idx})">\u00d7</button>
+          <button class="meal-cell-del" onclick="removeMealItem('${day}','${meal}',${idx})">×</button>
         </div>`;
       }).join('');
       const opts = state.recipes.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
       return `<td style="padding:4px 3px;border-bottom:1px solid var(--border);vertical-align:top">${items}<select class="meal-select" onchange="assignMeal('${day}','${meal}',this.value);this.value=''"><option value="">+ add</option>${opts}</select></td>`;
     }).join('');
-    return `<tr>
-      <td style="padding:8px 10px 8px 0;font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap;vertical-align:top;border-bottom:1px solid var(--border)">${day}</td>
-      ${cells}
-    </tr>`;
+    return `<tr><td style="padding:8px 10px 8px 0;font-size:13px;font-weight:600;color:var(--accent);white-space:nowrap;vertical-align:top;border-bottom:1px solid var(--border)">${day}</td>${cells}</tr>`;
   }).join('');
 
   return `
@@ -256,49 +401,94 @@ function renderPlanner() {
     </table>
     ${state.plannerViewRecipe ? renderPlannerRecipeModal() : ''}`;
 }
-function assignMeal(day, meal, rid) {
-  if (!rid) return;
-  if (!state.planner[day]) state.planner[day] = {};
-  if (!state.planner[day][meal]) state.planner[day][meal] = [];
-  state.planner[day][meal].push(parseInt(rid));
-  persist(); render();
-}
-function removeMealItem(day, meal, idx) {
-  if (!state.planner[day] || !state.planner[day][meal]) return;
-  state.planner[day][meal].splice(idx, 1);
-  persist(); render();
-}
-function clearMeal(day, meal) {
-  if (state.planner[day]) delete state.planner[day][meal];
-  persist(); render();
-}
-function generateGrocery() {
-  const items = {};
-  Object.values(state.planner).forEach(dm => {
-    Object.values(dm || {}).forEach(rids => {
-      const idList = Array.isArray(rids) ? rids : [rids];
-      idList.forEach(rid => {
-        const r = state.recipes.find(r => r.id === rid);
-        if (r) r.ingredients.forEach(ing => { items[ing.name] = ing.qty; });
-      });
-    });
-  });
-  const list = Object.entries(items).map(([name, qty], i) => ({
-    id: Date.now()+i, name, qty, checked: false, source: 'planner'
-  }));
-  const manual = state.grocery.filter(i => i.source === 'manual');
-  state.grocery = [...list, ...manual];
-  persist();
-  setTab('grocery');
-}
 
 // ── Recipes ────────────────────────────────────────────
+let debounceTimer = null;
+window.debounceRender = function() {
+  clearTimeout(debounceTimer);
+  debounceTimer = setTimeout(() => {
+    render();
+    const el = document.getElementById('recipe-search');
+    if (el) { el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  }, 300);
+}
+
+window.toggleRecipe = function(id) { state.expandedRecipe = state.expandedRecipe === id ? null : id; render(); }
+window.deleteRecipe = function(id) {
+  if (!confirm('Delete this recipe?')) return;
+  state.recipes = state.recipes.filter(r => r.id !== id);
+  state.expandedRecipe = null;
+  persist(); render();
+}
+window.startEditRecipe = function(id) {
+  const r = state.recipes.find(r => r.id === id);
+  if (!r) return;
+  state.editingRecipe = { id: r.id, name: r.name, time: r.time, servings: r.servings, tags: r.tags.join(', '), url: r.url||'', ingredients: r.ingredients.map(i=>({...i})), steps: r.steps };
+  render();
+}
+window.saveEditRecipe = function() {
+  const e = state.editingRecipe;
+  if (!e.name.trim()) { alert('Please enter a recipe name'); return; }
+  state.recipes = state.recipes.map(r => r.id !== e.id ? r : {
+    ...r, name: e.name.trim(), time: e.time.trim()||'—', servings: e.servings||2,
+    tags: e.tags ? e.tags.split(',').map(t=>t.trim()).filter(Boolean) : [],
+    url: e.url ? e.url.trim() : '',
+    ingredients: e.ingredients.filter(i=>i.name.trim()), steps: e.steps.trim(),
+  });
+  state.editingRecipe = null;
+  persist(); render();
+}
+window.saveNewRecipe = function() {
+  const nr = state.newRecipe;
+  if (!nr.name.trim()) { alert('Please enter a recipe name'); return; }
+  state.recipes.push({
+    id: Date.now(), name: nr.name.trim(), time: nr.time.trim()||'—', servings: nr.servings||2,
+    tags: nr.tags ? nr.tags.split(',').map(t=>t.trim()).filter(Boolean) : [],
+    url: nr.url ? nr.url.trim() : '',
+    ingredients: (nr.ingredients||[]).filter(i=>i.name.trim()), steps: nr.steps.trim(),
+  });
+  state.showNewRecipe = false; state.newRecipe = null;
+  persist(); render();
+}
+
+function renderIngredientRows(ingredients, stateKey) {
+  const rows = ingredients.map((ing, idx) => `
+    <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center">
+      <input type="text" placeholder="Qty" style="width:100px;flex-shrink:0" value="${esc(ing.qty)}" oninput="${stateKey}[${idx}].qty=this.value" autocomplete="off" autocorrect="off">
+      <input type="text" placeholder="Ingredient name" style="flex:1" value="${esc(ing.name)}" oninput="${stateKey}[${idx}].name=this.value" autocomplete="off" autocorrect="off">
+      <button style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1" onclick="${stateKey}.splice(${idx},1);render()">×</button>
+    </div>`).join('');
+  return `${rows}<button class="btn btn-secondary btn-sm" style="margin-top:2px" onclick="${stateKey}.push({qty:'',name:''});render()">+ Add ingredient</button>`;
+}
+
+function recipeModalHTML(title, data, stateKey, saveFunc, cancelFunc) {
+  const ings = data.ingredients || [];
+  return `<div class="modal-overlay" onclick="if(event.target===this){${cancelFunc}}">
+    <div class="modal">
+      <div class="modal-handle"></div>
+      <div class="modal-title">${title}</div>
+      <div class="form-group"><div class="label">Name</div><input type="text" placeholder="Recipe name" value="${esc(data.name||'')}" oninput="${stateKey}.name=this.value" autocomplete="off" autocapitalize="words"></div>
+      <div class="form-grid">
+        <div class="form-group"><div class="label">Time</div><input type="text" placeholder="20 min" value="${esc(data.time||'')}" oninput="${stateKey}.time=this.value" autocomplete="off"></div>
+        <div class="form-group"><div class="label">Servings</div><input type="number" value="${data.servings||2}" oninput="${stateKey}.servings=parseInt(this.value)"></div>
+      </div>
+      <div class="form-group"><div class="label">Tags (comma separated)</div><input type="text" placeholder="dinner, vegetarian" value="${esc(data.tags||'')}" oninput="${stateKey}.tags=this.value" autocomplete="off" autocorrect="off"></div>
+      <div class="form-group"><div class="label">Source URL (optional)</div><input type="url" placeholder="https://..." value="${esc(data.url||'')}" oninput="${stateKey}.url=this.value" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
+      <div class="form-group"><div class="label">Ingredients</div>${renderIngredientRows(ings, stateKey+'.ingredients')}</div>
+      <div class="form-group" style="margin-top:12px"><div class="label">Method / Steps</div><textarea placeholder="Describe how to cook this…" oninput="${stateKey}.steps=this.value">${esc(data.steps||'')}</textarea></div>
+      <div class="row" style="gap:10px">
+        <button class="btn btn-primary" style="flex:1" onclick="${saveFunc}">Save</button>
+        <button class="btn btn-secondary" onclick="${cancelFunc}">Cancel</button>
+      </div>
+    </div>
+  </div>`;
+}
+
 function renderRecipes() {
   const filtered = state.recipes.filter(r =>
     r.name.toLowerCase().includes(state.search.toLowerCase()) ||
     r.tags.some(t => t.includes(state.search.toLowerCase()))
   );
-
   const cards = filtered.map(r => {
     const isOpen = state.expandedRecipe === r.id;
     const tags = r.tags.map(t => `<span class="tag">${esc(t)}</span>`).join('');
@@ -312,7 +502,7 @@ function renderRecipes() {
         <div class="label">Method</div>
         <div class="steps-text">${esc(r.steps)}</div>
         <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap">
-          ${r.url ? `<a href="${esc(r.url)}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none">🔗 View source</a>` : ''}
+          ${r.url ? `<a href="${esc(r.url)}" target="_blank" class="btn btn-secondary btn-sm" style="text-decoration:none">🔗 Source</a>` : ''}
           <button class="btn btn-secondary btn-sm" onclick="startEditRecipe(${r.id});event.stopPropagation()">✏️ Edit</button>
           <button class="btn btn-danger btn-sm" onclick="deleteRecipe(${r.id});event.stopPropagation()">Delete</button>
         </div>`;
@@ -328,145 +518,45 @@ function renderRecipes() {
     </div>`;
   }).join('');
 
-  const modal = state.showNewRecipe ? renderNewRecipeModal() : (state.editingRecipe ? renderEditRecipeModal() : '');
+  let modal = '';
+  if (state.showNewRecipe) {
+    modal = recipeModalHTML('New Recipe', state.newRecipe, 'state.newRecipe', 'saveNewRecipe()', 'state.showNewRecipe=false;render()');
+  } else if (state.editingRecipe) {
+    modal = recipeModalHTML('Edit Recipe', state.editingRecipe, 'state.editingRecipe', 'saveEditRecipe()', 'state.editingRecipe=null;render()');
+  }
 
   return `
     <div class="action-row">
       <input class="search-input" type="search" placeholder="Search recipes…" value="${esc(state.search)}" oninput="state.search=this.value;debounceRender()" autocomplete="off" autocorrect="off" id="recipe-search">
-      <button class="btn btn-primary btn-sm" onclick="state.showNewRecipe=true;state.newRecipe={name:'',time:'',servings:2,tags:'',ingredients:[{qty:'',name:''}],steps:''};render()">+ New</button>
+      <button class="btn btn-primary btn-sm" onclick="state.showNewRecipe=true;state.newRecipe={name:'',time:'',servings:2,tags:'',url:'',ingredients:[{qty:'',name:''}],steps:''};render()">+ New</button>
     </div>
     <div class="recipe-grid">${cards || '<div class="empty"><div class="empty-icon">🔍</div>No recipes found</div>'}</div>
     ${modal}
     <script>setTimeout(function(){var m=document.querySelector('.modal');if(m)m.scrollTop=0;},50)<\/script>`;
 }
 
-function renderIngredientRows(ingredients, stateKey) {
-  const rows = ingredients.map((ing, idx) => `
-    <div class="ing-input-row" style="display:flex;gap:6px;margin-bottom:6px;align-items:center">
-      <input type="text" placeholder="Qty (e.g. 500g)" style="width:110px;flex-shrink:0" value="${esc(ing.qty)}" oninput="${stateKey}[${idx}].qty=this.value" autocomplete="off" autocorrect="off">
-      <input type="text" placeholder="Ingredient name" style="flex:1" value="${esc(ing.name)}" oninput="${stateKey}[${idx}].name=this.value" autocomplete="off" autocorrect="off">
-      <button style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1" onclick="${stateKey}.splice(${idx},1);render()">×</button>
-    </div>`).join('');
-  return `${rows}
-    <button class="btn btn-secondary btn-sm" style="margin-top:2px" onclick="${stateKey}.push({qty:'',name:''});render()">+ Add ingredient</button>`;
-}
-
-function renderNewRecipeModal() {
-  const ings = state.newRecipe.ingredients || [];
-  return `<div class="modal-overlay" onclick="if(event.target===this){state.showNewRecipe=false;render()}">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <div class="modal-title">New Recipe</div>
-      <div class="form-group"><div class="label">Name</div><input type="text" placeholder="Recipe name" value="${esc(state.newRecipe.name||'')}" oninput="state.newRecipe.name=this.value" autocomplete="off"></div>
-      <div class="form-grid">
-        <div class="form-group"><div class="label">Time</div><input type="text" placeholder="20 min" value="${esc(state.newRecipe.time||'')}" oninput="state.newRecipe.time=this.value" autocomplete="off"></div>
-        <div class="form-group"><div class="label">Servings</div><input type="number" value="${state.newRecipe.servings||2}" oninput="state.newRecipe.servings=parseInt(this.value)"></div>
-      </div>
-      <div class="form-group"><div class="label">Tags (comma separated)</div><input type="text" placeholder="dinner, vegetarian" value="${esc(state.newRecipe.tags||'')}" oninput="state.newRecipe.tags=this.value" autocomplete="off" autocorrect="off"></div>
-      <div class="form-group"><div class="label">Source URL (optional)</div><input type="url" placeholder="https://..." value="${esc(state.newRecipe.url||'')}" oninput="state.newRecipe.url=this.value" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
-      <div class="form-group"><div class="label">Ingredients</div>${renderIngredientRows(ings, 'state.newRecipe.ingredients')}</div>
-      <div class="form-group" style="margin-top:12px"><div class="label">Method / Steps</div><textarea placeholder="Describe how to cook this…" oninput="state.newRecipe.steps=this.value">${esc(state.newRecipe.steps||'')}</textarea></div>
-      <div class="row" style="gap:10px">
-        <button class="btn btn-primary" style="flex:1" onclick="saveNewRecipe()">Save Recipe</button>
-        <button class="btn btn-secondary" onclick="state.showNewRecipe=false;render()">Cancel</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function startEditRecipe(id) {
-  const r = state.recipes.find(r => r.id === id);
-  if (!r) return;
-  state.editingRecipe = {
-    id: r.id,
-    name: r.name,
-    time: r.time,
-    servings: r.servings,
-    tags: r.tags.join(', '),
-    url: r.url || '',
-    ingredients: r.ingredients.map(i => ({...i})),
-    steps: r.steps,
-  };
-  render();
-}
-
-function renderEditRecipeModal() {
-  const e = state.editingRecipe;
-  return `<div class="modal-overlay" onclick="if(event.target===this){state.editingRecipe=null;render()}">
-    <div class="modal">
-      <div class="modal-handle"></div>
-      <div class="modal-title">Edit Recipe</div>
-      <div class="form-group"><div class="label">Name</div><input type="text" value="${esc(e.name)}" oninput="state.editingRecipe.name=this.value" autocomplete="off" autocorrect="off" autocapitalize="words"></div>
-      <div class="form-grid">
-        <div class="form-group"><div class="label">Time</div><input type="text" placeholder="20 min" value="${esc(e.time)}" oninput="state.editingRecipe.time=this.value" autocomplete="off"></div>
-        <div class="form-group"><div class="label">Servings</div><input type="number" value="${e.servings}" oninput="state.editingRecipe.servings=parseInt(this.value)"></div>
-      </div>
-      <div class="form-group"><div class="label">Tags (comma separated)</div><input type="text" value="${esc(e.tags)}" oninput="state.editingRecipe.tags=this.value" autocomplete="off" autocorrect="off"></div>
-      <div class="form-group"><div class="label">Source URL (optional)</div><input type="url" placeholder="https://..." value="${esc(e.url||'')}" oninput="state.editingRecipe.url=this.value" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
-      <div class="form-group"><div class="label">Ingredients</div>${renderIngredientRows(e.ingredients, 'state.editingRecipe.ingredients')}</div>
-      <div class="form-group" style="margin-top:12px"><div class="label">Method / Steps</div><textarea oninput="state.editingRecipe.steps=this.value">${esc(e.steps)}</textarea></div>
-      <div class="row" style="gap:10px">
-        <button class="btn btn-primary" style="flex:1" onclick="saveEditRecipe()">Save Changes</button>
-        <button class="btn btn-secondary" onclick="state.editingRecipe=null;render()">Cancel</button>
-      </div>
-    </div>
-  </div>`;
-}
-
-function saveEditRecipe() {
-  const e = state.editingRecipe;
-  if (!e.name.trim()) { alert('Please enter a recipe name'); return; }
-  state.recipes = state.recipes.map(r => {
-    if (r.id !== e.id) return r;
-    return {
-      ...r,
-      name: e.name.trim(),
-      time: e.time.trim() || '—',
-      servings: e.servings || 2,
-      tags: e.tags ? e.tags.split(',').map(t => t.trim()).filter(Boolean) : [],
-      url: e.url ? e.url.trim() : '',
-      ingredients: e.ingredients.filter(i => i.name.trim()),
-      steps: e.steps.trim(),
-    };
-  });
-  state.editingRecipe = null;
-  persist(); render();
-}
-
-function saveNewRecipe() {
-  const nr = state.newRecipe;
-  if (!nr.name.trim()) { alert('Please enter a recipe name'); return; }
-  const r = {
-    id: Date.now(),
-    name: nr.name.trim(),
-    time: nr.time.trim() || '—',
-    servings: nr.servings || 2,
-    tags: nr.tags ? nr.tags.split(',').map(t=>t.trim()).filter(Boolean) : [],
-    url: nr.url ? nr.url.trim() : '',
-    ingredients: (nr.ingredients || []).filter(i => i.name.trim()),
-    steps: nr.steps.trim(),
-  };
-  state.recipes.push(r);
-  state.showNewRecipe = false;
-  state.newRecipe = null;
-  persist(); render();
-}
-function toggleRecipe(id) {
-  state.expandedRecipe = state.expandedRecipe === id ? null : id;
-  render();
-}
-function deleteRecipe(id) {
-  if (!confirm('Delete this recipe?')) return;
-  state.recipes = state.recipes.filter(r => r.id !== id);
-  state.expandedRecipe = null;
-  persist(); render();
-}
-
 // ── Grocery ────────────────────────────────────────────
+window.toggleGrocery = function(id) {
+  state.grocery = state.grocery.map(i => i.id === id ? {...i, checked: !i.checked} : i);
+  persist(); render();
+}
+window.removeGroceryItem = function(id) {
+  state.grocery = state.grocery.filter(i => i.id !== id);
+  persist(); render();
+}
+window.addGroceryItem = function() {
+  const inp = document.getElementById('grocery-input');
+  if (!inp || !inp.value.trim()) return;
+  state.grocery.push({ id: Date.now(), name: inp.value.trim(), qty: '', checked: false, source: 'manual' });
+  persist(); render();
+}
+window.clearGrocery = function() {
+  if (confirm('Clear the entire grocery list?')) { state.grocery = []; persist(); render(); }
+}
+
 function renderGrocery() {
   const unchecked = state.grocery.filter(i => !i.checked);
   const checked = state.grocery.filter(i => i.checked);
-
   const makeRow = (item) => {
     const done = item.checked;
     return `<div class="check-row">
@@ -479,57 +569,29 @@ function renderGrocery() {
       <button style="background:none;border:none;color:var(--muted);font-size:18px;cursor:pointer;padding:0 4px;line-height:1" onclick="removeGroceryItem(${item.id})">×</button>
     </div>`;
   };
-
-  const uncheckedHTML = unchecked.length ? unchecked.map(makeRow).join('') : '';
-  const checkedHTML = checked.length ? `
-    <div style="margin-top:14px">
-      <div class="label" style="margin-bottom:8px">Done (${checked.length})</div>
-      <div class="card" style="opacity:0.65">${checked.map(makeRow).join('')}</div>
-    </div>` : '';
-
-  const empty = state.grocery.length === 0 ? `<div class="empty"><div class="empty-icon">🛒</div><p>Your grocery list is empty.</p><p style="font-size:13px;margin-top:6px">Plan your meals and tap "Make list"</p></div>` : '';
-
   return `
     <div class="row-between" style="margin-bottom:14px">
-      <h2 style="margin:0">Grocery List <span style="font-size:14px;font-weight:400;color:var(--muted)">${unchecked.length > 0 ? unchecked.length + ' left' : '✓ all done'}</span></h2>
+      <h2 style="margin:0">Grocery List <span style="font-size:14px;font-weight:400;color:var(--muted)">${unchecked.length > 0 ? unchecked.length+' left' : '✓ all done'}</span></h2>
       ${state.grocery.length ? `<button class="btn btn-danger btn-sm" onclick="clearGrocery()">Clear all</button>` : ''}
     </div>
     <div class="row" style="margin-bottom:14px;gap:8px">
       <input type="text" id="grocery-input" placeholder="Add an item…" autocomplete="off" autocorrect="off" style="flex:1" onkeydown="if(event.key==='Enter')addGroceryItem()">
       <button class="btn btn-primary btn-sm" onclick="addGroceryItem()">Add</button>
     </div>
-    ${empty}
-    ${uncheckedHTML ? `<div class="card">${uncheckedHTML}</div>` : ''}
-    ${checkedHTML}`;
+    ${state.grocery.length === 0 ? '<div class="empty"><div class="empty-icon">🛒</div><p>Your grocery list is empty.</p><p style="font-size:13px;margin-top:6px">Plan meals and tap "Make list"</p></div>' : ''}
+    ${unchecked.length ? `<div class="card">${unchecked.map(makeRow).join('')}</div>` : ''}
+    ${checked.length ? `<div style="margin-top:14px"><div class="label" style="margin-bottom:8px">Done (${checked.length})</div><div class="card" style="opacity:0.65">${checked.map(makeRow).join('')}</div></div>` : ''}`;
 }
-
-function addGroceryItem() {
-  const inp = document.getElementById('grocery-input');
-  if (!inp || !inp.value.trim()) return;
-  state.grocery.push({ id: Date.now(), name: inp.value.trim(), qty: '', checked: false, source: 'manual' });
-  persist(); render();
-}
-function toggleGrocery(id) {
-  state.grocery = state.grocery.map(i => i.id === id ? {...i, checked: !i.checked} : i);
-  persist(); render();
-}
-function removeGroceryItem(id) {
-  state.grocery = state.grocery.filter(i => i.id !== id);
-  persist(); render();
-}
-function clearGrocery() {
-  if (confirm('Clear the entire grocery list?')) { state.grocery = []; persist(); render(); }
-}
-
-function bindEvents() {}
 
 function esc(s) {
   if (s == null) return '';
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// Init
-setTab('planner');
+// expose state and render globally for inline handlers
+window.state = state;
+window.render = render;
+
 </script>
 </body>
 </html>
