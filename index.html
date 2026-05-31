@@ -105,7 +105,7 @@
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
-import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getFirestore, doc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyArTdRs2Gg3hu8YtTRreFBfkJVrCAxkWS4",
@@ -150,21 +150,32 @@ let state = {
 };
 
 // ── Firestore ──────────────────────────────────────────
+let unsubscribeSnapshot = null;
+
 async function loadUserData(uid) {
   try {
-    const snap = await getDoc(doc(db, 'users', uid));
-    if (snap.exists()) {
-      const data = snap.data();
-      state.recipes = data.recipes || DEFAULT_RECIPES;
-      state.planner = migratePlanner(data.planner || {});
-      state.grocery = data.grocery || [];
-    } else {
-      // New user — save defaults
-      state.recipes = DEFAULT_RECIPES;
-      state.planner = {};
-      state.grocery = [];
-      await saveUserData(uid);
-    }
+    // Unsubscribe from any previous listener
+    if (unsubscribeSnapshot) unsubscribeSnapshot();
+
+    // Set up real-time listener
+    unsubscribeSnapshot = onSnapshot(doc(db, 'users', uid), async (snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        // Only update if change came from server (not our own save)
+        if (!state.syncing) {
+          state.recipes = data.recipes || DEFAULT_RECIPES;
+          state.planner = migratePlanner(data.planner || {});
+          state.grocery = data.grocery || [];
+          render();
+        }
+      } else {
+        // New user — save defaults
+        state.recipes = DEFAULT_RECIPES;
+        state.planner = {};
+        state.grocery = [];
+        await saveUserData(uid);
+      }
+    });
   } catch(e) { console.error(e); }
 }
 
@@ -241,7 +252,10 @@ async function handleEmailAuth(isSignUp) {
 }
 
 async function handleSignOut() {
-  if (confirm('Sign out of Mealwise?')) await signOut(auth);
+  if (confirm('Sign out of Mealwise?')) {
+    if (unsubscribeSnapshot) unsubscribeSnapshot();
+    await signOut(auth);
+  }
 }
 
 onAuthStateChanged(auth, async (u) => {
