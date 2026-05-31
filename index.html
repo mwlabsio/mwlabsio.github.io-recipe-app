@@ -512,7 +512,7 @@ function renderIngredientRows(ingredients, stateKey) {
       <input type="text" placeholder="Ingredient name" style="flex:1" value="${esc(ing.name)}" 
         onchange="${stateKey}[${idx}].name=this.value" 
         autocomplete="off" autocorrect="off">
-      <button style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1" onclick="${stateKey}.splice(${idx},1);render()">×</button>
+      <button style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1" onclick="var m=document.querySelector('.modal');var s=m?m.scrollTop:0;${stateKey}.splice(${idx},1);render();setTimeout(function(){var m=document.querySelector('.modal');if(m)m.scrollTop=s;},50)">×</button>
     </div>`).join('');
   return `${rows}<button class="btn btn-secondary btn-sm" style="margin-top:2px" onclick="${stateKey}.push({qty:'',name:''});render();setTimeout(function(){var m=document.querySelector('.modal');if(m)m.scrollTop=m.scrollHeight;},50)">+ Add ingredient</button>`;
 }
