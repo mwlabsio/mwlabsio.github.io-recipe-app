@@ -104,7 +104,7 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -209,8 +209,14 @@ function migratePlanner(planner) {
 // ── Auth ───────────────────────────────────────────────
 async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
-  try { await signInWithPopup(auth, provider); }
-  catch(e) { console.error(e); }
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  try {
+    if (isMobile) {
+      await signInWithRedirect(auth, provider);
+    } else {
+      await signInWithPopup(auth, provider);
+    }
+  } catch(e) { console.error(e); }
 }
 
 async function handleSignOut() {
@@ -225,6 +231,11 @@ onAuthStateChanged(auth, async (u) => {
     renderApp();
     setTab('planner');
   } else {
+    // Check if we're returning from a redirect
+    try {
+      const result = await getRedirectResult(auth);
+      if (result && result.user) return; // onAuthStateChanged will fire again
+    } catch(e) { console.error(e); }
     renderLogin();
   }
 });
