@@ -104,7 +104,7 @@
 
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
 import { getFirestore, doc, getDoc, setDoc, onSnapshot } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
 
 const firebaseConfig = {
@@ -211,12 +211,33 @@ async function signInWithGoogle() {
   const provider = new GoogleAuthProvider();
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
   try {
-    if (isMobile) {
-      await signInWithRedirect(auth, provider);
-    } else {
-      await signInWithPopup(auth, provider);
-    }
+    if (isMobile) { await signInWithRedirect(auth, provider); }
+    else { await signInWithPopup(auth, provider); }
   } catch(e) { console.error(e); }
+}
+
+async function handleEmailAuth(isSignUp) {
+  const email = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const errEl = document.getElementById('auth-error');
+  if (!email || !password) { errEl.textContent = 'Please enter email and password.'; return; }
+  try {
+    if (isSignUp) {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } else {
+      await signInWithEmailAndPassword(auth, email, password);
+    }
+  } catch(e) {
+    const msgs = {
+      'auth/email-already-in-use': 'This email is already registered. Try signing in.',
+      'auth/invalid-email': 'Please enter a valid email address.',
+      'auth/weak-password': 'Password must be at least 6 characters.',
+      'auth/user-not-found': 'No account found with this email.',
+      'auth/wrong-password': 'Incorrect password.',
+      'auth/invalid-credential': 'Incorrect email or password.',
+    };
+    errEl.textContent = msgs[e.code] || 'Something went wrong. Please try again.';
+  }
 }
 
 async function handleSignOut() {
@@ -255,13 +276,18 @@ function renderLogin() {
         </svg>
       </div>
       <div class="login-title">Mealwise</div>
-      <div class="login-sub">Plan your meals, manage recipes,<br>and build your grocery list — all in one place.</div>
-      <button class="google-btn" onclick="window.signInWithGoogle()">
-        <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.36-8.16 2.36-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
-        Continue with Google
-      </button>
+      <div class="login-sub">Plan your meals, manage recipes,<br>and build your grocery list.</div>
+      <div style="width:100%;max-width:320px">
+        <div style="margin-bottom:12px">
+          <input id="auth-email" type="email" placeholder="Email address" autocomplete="email" autocorrect="off" autocapitalize="none" style="margin-bottom:8px">
+          <input id="auth-password" type="password" placeholder="Password (min 6 characters)" autocomplete="current-password">
+        </div>
+        <div id="auth-error" style="color:var(--danger);font-size:13px;margin-bottom:10px;min-height:18px;text-align:center"></div>
+        <button class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:10px" onclick="window.handleEmailAuth(false)">Sign in</button>
+        <button class="btn btn-secondary" style="width:100%;justify-content:center" onclick="window.handleEmailAuth(true)">Create account</button>
+      </div>
     </div>`;
-  window.signInWithGoogle = signInWithGoogle;
+  window.handleEmailAuth = handleEmailAuth;
 }
 
 function renderApp() {
@@ -293,12 +319,14 @@ function renderApp() {
 function renderHeader() {
   const el = document.getElementById('user-area');
   if (!el || !user) return;
-  const initials = user.displayName ? user.displayName.split(' ').map(n=>n[0]).join('').toUpperCase().slice(0,2) : '?';
+  const email = user.email || '';
+  const initials = email ? email[0].toUpperCase() : '?';
   const photo = user.photoURL;
+  const displayName = user.displayName ? user.displayName.split(' ')[0] : email.split('@')[0];
   el.innerHTML = `
     <button class="user-btn" onclick="window.handleSignOut()">
       <div class="user-avatar">${photo ? `<img src="${photo}" alt="">` : initials}</div>
-      <span>${user.displayName ? user.displayName.split(' ')[0] : 'You'}</span>
+      <span>${displayName}</span>
       ${state.syncing ? '<span class="sync-indicator">saving…</span>' : ''}
     </button>`;
 }
