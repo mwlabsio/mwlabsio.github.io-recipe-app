@@ -514,7 +514,7 @@ function renderIngredientRows(ingredients, stateKey) {
         autocomplete="off" autocorrect="off">
       <button style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1" onclick="${stateKey}.splice(${idx},1);render()">×</button>
     </div>`).join('');
-  return `${rows}<button class="btn btn-secondary btn-sm" style="margin-top:2px" onclick="${stateKey}.push({qty:'',name:''});render()">+ Add ingredient</button>`;
+  return `${rows}<button class="btn btn-secondary btn-sm" style="margin-top:2px" onclick="${stateKey}.push({qty:'',name:''});render();setTimeout(function(){var m=document.querySelector('.modal');if(m)m.scrollTop=m.scrollHeight;},50)">+ Add ingredient</button>`;
 }
 
 function recipeModalHTML(title, data, stateKey, saveFunc, cancelFunc) {
