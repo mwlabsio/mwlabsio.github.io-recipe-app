@@ -335,11 +335,14 @@ function renderHeader() {
   const photo = user.photoURL;
   const displayName = user.displayName ? user.displayName.split(' ')[0] : email.split('@')[0];
   el.innerHTML = `
-    <button class="user-btn" onclick="window.handleSignOut()">
-      <div class="user-avatar">${photo ? `<img src="${photo}" alt="">` : initials}</div>
-      <span>${displayName}</span>
-      ${state.syncing ? '<span class="sync-indicator">saving…</span>' : ''}
-    </button>`;
+    <div style="display:flex;align-items:center;gap:8px">
+      <button onclick="window.location.reload()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;padding:4px;line-height:1" title="Refresh app">↻</button>
+      <button class="user-btn" onclick="window.handleSignOut()">
+        <div class="user-avatar">${photo ? `<img src="${photo}" alt="">` : initials}</div>
+        <span>${displayName}</span>
+        ${state.syncing ? '<span class="sync-indicator">saving…</span>' : ''}
+      </button>
+    </div>`;
 }
 
 // ── Tab ────────────────────────────────────────────────
