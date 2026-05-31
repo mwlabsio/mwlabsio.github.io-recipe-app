@@ -151,25 +151,21 @@ let state = {
 
 // ── Firestore ──────────────────────────────────────────
 let unsubscribeSnapshot = null;
+let lastSaveTime = 0;
 
 async function loadUserData(uid) {
   try {
-    // Unsubscribe from any previous listener
     if (unsubscribeSnapshot) unsubscribeSnapshot();
-
-    // Set up real-time listener
     unsubscribeSnapshot = onSnapshot(doc(db, 'users', uid), async (snap) => {
       if (snap.exists()) {
         const data = snap.data();
-        // Only update if change came from server (not our own save)
-        if (!state.syncing) {
-          state.recipes = data.recipes || DEFAULT_RECIPES;
-          state.planner = migratePlanner(data.planner || {});
-          state.grocery = data.grocery || [];
-          render();
-        }
+        // Skip if we just saved (within 2 seconds) to avoid overwriting local edits
+        if (Date.now() - lastSaveTime < 2000) return;
+        state.recipes = data.recipes || DEFAULT_RECIPES;
+        state.planner = migratePlanner(data.planner || {});
+        state.grocery = data.grocery || [];
+        render();
       } else {
-        // New user — save defaults
         state.recipes = DEFAULT_RECIPES;
         state.planner = {};
         state.grocery = [];
@@ -183,6 +179,7 @@ async function saveUserData(uid) {
   if (!uid) return;
   try {
     state.syncing = true;
+    lastSaveTime = Date.now();
     renderHeader();
     await setDoc(doc(db, 'users', uid), {
       recipes: state.recipes,
