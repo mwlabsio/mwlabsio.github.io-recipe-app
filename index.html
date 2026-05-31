@@ -28,7 +28,7 @@
   .header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
   .logo{font-size:36px;font-weight:800;color:var(--accent);letter-spacing:-0.8px;display:flex;align-items:center;gap:6px;line-height:1}
   .logo-icon{display:flex;align-items:center}
-  .logo span{font-weight:400;color:var(--muted);font-size:13px;display:block;letter-spacing:0.5px;margin-top:-1px}
+  .logo span{font-weight:400;color:var(--muted);font-size:12px;display:block;letter-spacing:0.5px;margin-top:-1px;white-space:nowrap}
   .user-btn{display:flex;align-items:center;gap:6px;background:var(--bg);border:1.5px solid var(--border);border-radius:50px;padding:6px 12px 6px 8px;cursor:pointer;font-size:13px;font-weight:500;color:var(--text)}
   .user-avatar{width:26px;height:26px;border-radius:50%;background:var(--accentbg);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--accent2);overflow:hidden;flex-shrink:0}
   .user-avatar img{width:100%;height:100%;object-fit:cover}
@@ -336,10 +336,9 @@ function renderHeader() {
   const displayName = user.displayName ? user.displayName.split(' ')[0] : email.split('@')[0];
   el.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px">
-      <button onclick="window.location.reload()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:18px;padding:4px;line-height:1" title="Refresh app">↻</button>
-      <button class="user-btn" onclick="window.handleSignOut()">
+      <button onclick="window.location.reload()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:4px;line-height:1" title="Refresh app">↻</button>
+      <button class="user-btn" style="padding:4px" onclick="window.handleSignOut()">
         <div class="user-avatar">${photo ? `<img src="${photo}" alt="">` : initials}</div>
-        <span>${displayName}</span>
         ${state.syncing ? '<span class="sync-indicator">saving…</span>' : ''}
       </button>
     </div>`;
