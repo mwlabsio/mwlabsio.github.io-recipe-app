@@ -504,8 +504,12 @@ window.saveNewRecipe = function() {
 function renderIngredientRows(ingredients, stateKey) {
   const rows = ingredients.map((ing, idx) => `
     <div style="display:flex;gap:6px;margin-bottom:6px;align-items:center">
-      <input type="text" placeholder="Qty" style="width:100px;flex-shrink:0" value="${esc(ing.qty)}" oninput="${stateKey}[${idx}].qty=this.value" autocomplete="off" autocorrect="off">
-      <input type="text" placeholder="Ingredient name" style="flex:1" value="${esc(ing.name)}" oninput="${stateKey}[${idx}].name=this.value" autocomplete="off" autocorrect="off">
+      <input type="text" placeholder="Qty" style="width:100px;flex-shrink:0" value="${esc(ing.qty)}" 
+        onchange="${stateKey}[${idx}].qty=this.value" 
+        autocomplete="off" autocorrect="off">
+      <input type="text" placeholder="Ingredient name" style="flex:1" value="${esc(ing.name)}" 
+        onchange="${stateKey}[${idx}].name=this.value" 
+        autocomplete="off" autocorrect="off">
       <button style="background:none;border:none;color:var(--muted);font-size:20px;cursor:pointer;padding:0 4px;flex-shrink:0;line-height:1" onclick="${stateKey}.splice(${idx},1);render()">×</button>
     </div>`).join('');
   return `${rows}<button class="btn btn-secondary btn-sm" style="margin-top:2px" onclick="${stateKey}.push({qty:'',name:''});render()">+ Add ingredient</button>`;
@@ -517,15 +521,15 @@ function recipeModalHTML(title, data, stateKey, saveFunc, cancelFunc) {
     <div class="modal">
       <div class="modal-handle"></div>
       <div class="modal-title">${title}</div>
-      <div class="form-group"><div class="label">Name</div><input type="text" placeholder="Recipe name" value="${esc(data.name||'')}" oninput="${stateKey}.name=this.value" autocomplete="off" autocapitalize="words"></div>
+      <div class="form-group"><div class="label">Name</div><input type="text" placeholder="Recipe name" value="${esc(data.name||'')}" onchange="${stateKey}.name=this.value" autocomplete="off" autocapitalize="words"></div>
       <div class="form-grid">
-        <div class="form-group"><div class="label">Time</div><input type="text" placeholder="20 min" value="${esc(data.time||'')}" oninput="${stateKey}.time=this.value" autocomplete="off"></div>
-        <div class="form-group"><div class="label">Servings</div><input type="number" value="${data.servings||2}" oninput="${stateKey}.servings=parseInt(this.value)"></div>
+        <div class="form-group"><div class="label">Time</div><input type="text" placeholder="20 min" value="${esc(data.time||'')}" onchange="${stateKey}.time=this.value" autocomplete="off"></div>
+        <div class="form-group"><div class="label">Servings</div><input type="number" value="${data.servings||2}" onchange="${stateKey}.servings=parseInt(this.value)"></div>
       </div>
-      <div class="form-group"><div class="label">Tags (comma separated)</div><input type="text" placeholder="dinner, vegetarian" value="${esc(data.tags||'')}" oninput="${stateKey}.tags=this.value" autocomplete="off" autocorrect="off"></div>
-      <div class="form-group"><div class="label">Source URL (optional)</div><input type="url" placeholder="https://..." value="${esc(data.url||'')}" oninput="${stateKey}.url=this.value" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
+      <div class="form-group"><div class="label">Tags (comma separated)</div><input type="text" placeholder="dinner, vegetarian" value="${esc(data.tags||'')}" onchange="${stateKey}.tags=this.value" autocomplete="off" autocorrect="off"></div>
+      <div class="form-group"><div class="label">Source URL (optional)</div><input type="url" placeholder="https://..." value="${esc(data.url||'')}" onchange="${stateKey}.url=this.value" autocomplete="off" autocorrect="off" autocapitalize="none"></div>
       <div class="form-group"><div class="label">Ingredients</div>${renderIngredientRows(ings, stateKey+'.ingredients')}</div>
-      <div class="form-group" style="margin-top:12px"><div class="label">Method / Steps</div><textarea placeholder="Describe how to cook this…" oninput="${stateKey}.steps=this.value">${esc(data.steps||'')}</textarea></div>
+      <div class="form-group" style="margin-top:12px"><div class="label">Method / Steps</div><textarea placeholder="Describe how to cook this…" onchange="${stateKey}.steps=this.value">${esc(data.steps||'')}</textarea></div>
       <div class="row" style="gap:10px">
         <button class="btn btn-primary" style="flex:1" onclick="${saveFunc}">Save</button>
         <button class="btn btn-secondary" onclick="${cancelFunc}">Cancel</button>
