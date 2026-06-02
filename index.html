@@ -287,7 +287,7 @@ function renderLogin() {
         </svg>
       </div>
       <div class="login-title">Mealwise</div>
-      <div class="login-sub">Plan your meals, manage recipes,<br>and build your grocery list.</div>
+      <div class="login-sub">Made with love for Melody's family & friends 🌿<br>Sign in to plan your meals, save your favourite recipes and build your grocery list.</div>
       <div style="width:100%;max-width:320px">
         <div style="margin-bottom:12px">
           <input id="auth-email" type="email" placeholder="Email address" autocomplete="email" autocorrect="off" autocapitalize="none" style="margin-bottom:8px">
@@ -385,7 +385,13 @@ window.generateGrocery = function() {
     Object.values(dm || {}).forEach(rids => {
       (Array.isArray(rids) ? rids : [rids]).forEach(rid => {
         const r = state.recipes.find(r => r.id === rid);
-        if (r) r.ingredients.forEach(ing => { items[ing.name] = ing.qty; });
+        if (r) r.ingredients.forEach(ing => {
+          if (items[ing.name]) {
+            items[ing.name] = items[ing.name] + ' + ' + ing.qty;
+          } else {
+            items[ing.name] = ing.qty;
+          }
+        });
       });
     });
   });
