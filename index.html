@@ -464,8 +464,15 @@ function renderPlanner() {
           <button class="meal-cell-del" onclick="removeMealItem('${day}','${meal}',${idx})">×</button>
         </div>`;
       }).join('');
-      const opts = state.recipes.map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
-      return `<td>${items}<select class="meal-select" onchange="assignMeal('${day}','${meal}',this.value);this.value=''"><option value="">+</option>${opts}</select></td>`;
+      const mealTypes = ['breakfast','lunch','dinner'];
+      const mealKey = meal.toLowerCase();
+      const opts = state.recipes.filter(r => {
+        const tags = (r.tags||[]).map(t=>t.toLowerCase());
+        const typed = tags.some(t => mealTypes.includes(t));
+        // show if tagged for this meal, or if it has no meal-type tag at all
+        return tags.includes(mealKey) || !typed;
+      }).map(r => `<option value="${r.id}">${esc(r.name)}</option>`).join('');
+      return `<td>${items}<select class="meal-select" onchange="assignMeal('${day}','${meal}',this.value);this.value=''"><option value="" hidden>+</option>${opts}</select></td>`;
     }).join('');
     return `<tr><td class="pl-day-cell"><div class="pl-day ${isToday?'today':''}"><span class="pl-dow">${day}</span>${isToday?'<span class="pl-sub">today</span>':''}</div></td>${cells}</tr>`;
   }).join('');
