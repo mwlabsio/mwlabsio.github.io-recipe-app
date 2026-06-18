@@ -361,6 +361,7 @@ function renderHeader() {
   el.innerHTML = `
     <div style="display:flex;align-items:center;gap:8px">
       <button onclick="window.location.reload()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:20px;padding:4px;line-height:1" title="Refresh app">↻</button>
+      <button onclick="window.exportData()" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;padding:4px;line-height:1;font-weight:600" title="Export my data">⬇</button>
       <button class="user-btn" style="padding:4px" onclick="window.handleSignOut()">
         <div class="user-avatar">${photo ? `<img src="${photo}" alt="">` : initials}</div>
         ${state.syncing ? '<span class="sync-indicator">saving…</span>' : ''}
@@ -705,6 +706,24 @@ function esc(s) {
 window.state = state;
 window.render = render;
 
+
+// ── Export ────────────────────────────────────────────
+window.exportData = function() {
+  const data = {
+    exportedAt: new Date().toISOString(),
+    app: 'Mealwise',
+    recipes: state.recipes,
+    planner: state.planner,
+    grocery: state.grocery,
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `mealwise-backup-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 </script>
 </body>
 </html>
