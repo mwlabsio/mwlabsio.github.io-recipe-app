@@ -178,11 +178,18 @@ async function loadUserData(uid) {
         const data = snap.data();
         // Skip if we just saved (within 2 seconds) to avoid overwriting local edits
         if (Date.now() - lastSaveTime < 2000) return;
-        state.recipes = data.recipes || DEFAULT_RECIPES;
-        state.planner = migratePlanner(data.planner || {});
+        // Only fall back to defaults if there are truly no recipes saved
+        state.recipes = (data.recipes && data.recipes.length) ? data.recipes : DEFAULT_RECIPES;
+        // Only fall back to defaults if planner has no entries
+        const savedPlanner = data.planner || {};
+        const hasPlanner = Object.values(savedPlanner).some(meals =>
+          meals && typeof meals === 'object' && Object.values(meals).some(arr => arr && arr.length > 0)
+        );
+        state.planner = hasPlanner ? migratePlanner(savedPlanner) : migratePlanner({});
         state.grocery = data.grocery || [];
         render();
       } else {
+        // First time user — seed with defaults and save
         state.recipes = DEFAULT_RECIPES;
         state.planner = {};
         state.grocery = [];
